@@ -26,18 +26,23 @@ class CalcTF : public QMainWindow
   private slots:
     void on_btn_calc_clicked();
 
+//    void on_le_freq_start_textChanged(const QString& arg1);
+
+//    void on_le_freq_stop_textChanged(const QString& arg1);
+
   private:
     Ui::CalcTF* ui;
 
-//    double calc_co_part(double f_co = 0, double f_q = 0, double matl_z = 0);
-//    double calc_c_part(double f_c = 0, double f_q = 0, double matl_z = 0);
-
+    void set_res_text();
     // pi value
     const double pi = 3.1415926;
-    // crystal density
+    // xtal density
     const double d_q = 2.648;
-    // crystal constant
+    // xtal constant
     const double n_q = 1.668e13;
+
+//    QString s_Freq_c = "";
+//    QString s_Freq_q = "";
 };
 
 #endif // CALCTF_H
