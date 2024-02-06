@@ -30,6 +30,7 @@ class CalcTF : public QMainWindow
 
 //    void on_le_freq_stop_textChanged(const QString& arg1);
 
+
   private:
     Ui::CalcTF* ui;
 
