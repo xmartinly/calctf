@@ -33,6 +33,8 @@ class CalcTF : public QMainWindow
     const double d_q = 2.648;
     // xtal constant
     const double n_q = 1.668e13;
+
+
 };
 
 #endif // CALCTF_H
