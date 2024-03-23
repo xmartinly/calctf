@@ -3,9 +3,6 @@
 #define CALCTF_H
 
 #include <QMainWindow>
-#include <QDebug>
-#include <cmath>
-
 
 
 QT_BEGIN_NAMESPACE
@@ -26,11 +23,6 @@ class CalcTF : public QMainWindow
   private slots:
     void on_btn_calc_clicked();
 
-//    void on_le_freq_start_textChanged(const QString& arg1);
-
-//    void on_le_freq_stop_textChanged(const QString& arg1);
-
-
   private:
     Ui::CalcTF* ui;
 
@@ -41,9 +33,6 @@ class CalcTF : public QMainWindow
     const double d_q = 2.648;
     // xtal constant
     const double n_q = 1.668e13;
-
-//    QString s_Freq_c = "";
-//    QString s_Freq_q = "";
 };
 
 #endif // CALCTF_H

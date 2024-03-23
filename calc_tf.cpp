@@ -1,6 +1,7 @@
 ﻿
 #include "calc_tf.h"
 #include "ui_calc_tf.h"
+#include <cmath>
 
 
 CalcTF::CalcTF(QWidget* parent)
@@ -12,8 +13,6 @@ CalcTF::CalcTF(QWidget* parent)
 CalcTF::~CalcTF() {
     delete ui;
 }
-
-
 
 void CalcTF::on_btn_calc_clicked() {
     // xtal stop frequency
@@ -30,8 +29,6 @@ void CalcTF::on_btn_calc_clicked() {
         return;
     }
     ui->lbl_result->clear();
-//    s_Freq_q = "";
-//    s_Freq_c = "";
     // part1 for normal calculate
     double val_frnt = (n_q * d_q) / (pi * matl_d * f_c * matl_z);
     // part2 for atan calculate
@@ -39,28 +36,8 @@ void CalcTF::on_btn_calc_clicked() {
     // thickness value
     double thickness = val_frnt * val_back;
     // thickness text, include unit
-    QString text_thickness = "Thickness: \t" +  QString::number(thickness, 'f', 3) + u8"\tÅ";
+    QString text_thickness = u8"厚度: \t" +  QString::number(thickness, 'f', 3) + u8"\tÅ";
     // rate text, include unit
-    QString text_rate = "Rate: \t\t" + QString::number(thickness * 1000 / acq_intvl, 'f', 3) + u8"\tÅ/s";
+    QString text_rate = u8"速率: \t" + QString::number(thickness * 1000 / acq_intvl, 'f', 3) + u8"\tÅ/s";
     ui->lbl_result->setText(text_thickness + "\n" + text_rate);
 }
-
-
-//void CalcTF::on_le_freq_start_textChanged(const QString& arg1) {
-//    double f_q = arg1.toDouble();
-//    s_Freq_q = ui->lb_f_q->text() + ":\t" + QString::number(f_q / 1000000, 'f', 3) + " MHz";
-//    set_res_text();
-//}
-
-
-//void CalcTF::on_le_freq_stop_textChanged(const QString& arg1) {
-//    double f_c = arg1.toDouble();
-//    s_Freq_c = ui->lb_f_c->text()  + ":\t" + QString::number(f_c / 1000000, 'f', 3) + " MHz";
-//    set_res_text();
-//}
-
-//void CalcTF::set_res_text() {
-//    ui->lbl_result->clear();
-//    ui->lbl_result->setText(s_Freq_q + "\n" + s_Freq_c);
-//}
-

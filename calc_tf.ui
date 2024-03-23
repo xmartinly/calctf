@@ -73,8 +73,11 @@
         <height>30</height>
        </size>
       </property>
+      <property name="toolTip">
+       <string/>
+      </property>
       <property name="text">
-       <string>Calc</string>
+       <string>计算</string>
       </property>
      </widget>
     </item>
@@ -88,8 +91,11 @@
           <height>30</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Start/Stop frequency sample interval</string>
+        </property>
         <property name="text">
-         <string>Interval(ms)</string>
+         <string>采集间隔(ms)</string>
         </property>
        </widget>
       </item>
@@ -117,8 +123,11 @@
           <height>30</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Material density</string>
+        </property>
         <property name="text">
-         <string>Matl Density</string>
+         <string>材料密度</string>
         </property>
        </widget>
       </item>
@@ -143,8 +152,11 @@
           <height>30</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Stop frequency</string>
+        </property>
         <property name="text">
-         <string>Freq Stop</string>
+         <string>截至频率</string>
         </property>
        </widget>
       </item>
@@ -198,8 +210,11 @@
           <height>30</height>
          </size>
         </property>
+        <property name="toolTip">
+         <string>Start frequency</string>
+        </property>
         <property name="text">
-         <string>Freq Start</string>
+         <string>开始频率</string>
         </property>
        </widget>
       </item>
@@ -211,8 +226,11 @@
           <height>30</height>
          </size>
         </property>
-        <property name="text">
+        <property name="toolTip">
          <string>Z-Ratio</string>
+        </property>
+        <property name="text">
+         <string>声阻抗</string>
         </property>
        </widget>
       </item>
