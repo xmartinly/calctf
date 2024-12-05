@@ -48,6 +48,8 @@ class CalcTF : public QMainWindow
 
     void calcFunction() const;
 
+    void errMsg(const QString& title, const QString& msg) const;
+
 
 
 };

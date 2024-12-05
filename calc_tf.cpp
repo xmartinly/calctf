@@ -46,17 +46,34 @@ double CalcTF::newtonRaphson(double initial_guess, double d_m,  double matl_z, d
 }
 
 void CalcTF::calcFunction() const {
+    bool ok;
     // xtal start frequency
-    double f_q = ui->le_freq_start->text().toDouble();
+    double f_q = ui->le_freq_start->text().toDouble(&ok);
+    if(!ok) {
+        errMsg(u8"频率", u8"起始频率输入格式错误。");
+        return;
+    }
     // material z
-    double matl_z = ui->le_matl_z->text().toDouble();
+    double matl_z = ui->le_matl_z->text().toDouble(&ok);
+    if(!ok) {
+        errMsg(u8"Z-Ratio", u8"Z-Ratio输入格式错误。");
+        return;
+    }
     // material density
-    double matl_d = ui->le_matl_d->text().toDouble();
+    double matl_d = ui->le_matl_d->text().toDouble(&ok);
+    if(!ok) {
+        errMsg(u8"密度", u8"材料密度输入格式错误。");
+        return;
+    }
     if(calc_freq_) {
         // input thickness
-        double thck = ui->le_thck->text().toDouble();
+        double thck = ui->le_thck->text().toDouble(&ok);
+        if(!ok) {
+            errMsg(u8"厚度", u8"厚度输入错误。");
+            return;
+        }
         if(thck < 10) {
-            QMessageBox::information(nullptr, u8"厚度参数", u8"厚度参数错误，需要大于10的值");
+            QMessageBox::information(nullptr, u8"厚度参数", u8"厚度输入格式错误，需要大于10的值");
             return;
         }
         // calc frequency stop
@@ -69,15 +86,19 @@ void CalcTF::calcFunction() const {
         return;
     }
     // time span
-    double acq_intvl = ui->le_meas_itl->text().toDouble();
-    // xtal stop frequency
-    double f_c = ui->le_freq_stop->text().toDouble();
-    if(f_c == f_q || f_q < f_c) {
-        QMessageBox::information(nullptr, u8"频率", u8"频率输入错误。");
+    double acq_intvl = ui->le_meas_itl->text().toDouble(&ok);
+    if(!ok || acq_intvl < 10) {
+        errMsg(u8"间隔", u8"间隔输入格式错误。\n间隔时间过短，需要设置为10ms以上。");
         return;
     }
-    if(acq_intvl < 10) {
-        QMessageBox::information(nullptr, u8"间隔时间", u8"间隔时间过短，需要设置为10ms以上。");
+    // xtal stop frequency
+    double f_c = ui->le_freq_stop->text().toDouble(&ok);
+    if(!ok) {
+        errMsg(u8"频率", u8"中止频率输入格式错误。");
+        return;
+    }
+    if(f_c == f_q || f_q < f_c) {
+        QMessageBox::information(nullptr, u8"频率", u8"频率输入格式错误。\n频率只不能相同且中止频率需要小于起始频率。");
         return;
     }
     double thck = calcThickness(f_c, matl_d, matl_z, f_q);
@@ -86,6 +107,10 @@ void CalcTF::calcFunction() const {
     // rate text, include unit
     QString text_rate = u8"速率: \t" + QString::number(thck * 1000 / acq_intvl, 'f', 3) + u8"\tÅ/s";
     ui->lbl_result->setText(text_thickness + "\n" + text_rate);
+}
+
+void CalcTF::errMsg(const QString& title, const QString& msg) const {
+    QMessageBox::information(nullptr, title, msg);
 }
 
 
