@@ -2,7 +2,8 @@
 #include "calc_tf.h"
 #include "ui_calc_tf.h"
 #include <cmath>
-
+#include <QMessageBox>
+#include <QDebug>
 
 CalcTF::CalcTF(QWidget* parent)
     : QMainWindow(parent)
@@ -18,23 +19,53 @@ CalcTF::~CalcTF() {
     delete ui;
 }
 
+///
+/// \brief CalcTF::on_btn_calc_clicked
+///
 void CalcTF::on_btn_calc_clicked() {
+    initial_guess_ = 6000000 - cyg_range_;
     calcFunction();
 }
 
-
+///
+/// \brief CalcTF::deriCalcThickness
+/// \param f_c
+/// \param d_m
+/// \param matl_z
+/// \param f_q
+/// \return
+///
 double CalcTF::deriCalcThickness(double f_c, double d_m, double matl_z, double f_q) const {
     double term1 = (n_q * d_q / (pi * d_m * f_c * f_c * matl_z)) * atan(matl_z * tan(pi * (f_q - f_c) / f_q));
     double term2 = (n_q * d_q / (pi * d_m * f_c * matl_z)) * matl_z * (1 / cos(pi * (f_q - f_c) / f_q)) * (-pi / f_q);
     return term1 + term2;
 }
 
+///
+/// \brief CalcTF::calcThickness
+/// \param f_c
+/// \param d_m
+/// \param matl_z
+/// \param f_q
+/// \param thck
+/// \return
+///
 double CalcTF::calcThickness(double f_c, double d_m, double matl_z, double f_q, double thck) const {
     return (n_q * d_q / (pi * d_m * f_c * matl_z)) * atan(matl_z * tan(pi * (f_q - f_c) / f_q)) - thck;
 }
 
-double CalcTF::newtonRaphson(double initial_guess, double d_m,  double matl_z, double f_q, double thck, double epsilon) const {
-    double F_c = initial_guess;
+///
+/// \brief CalcTF::newtonRaphson
+/// \param initial_guess
+/// \param d_m
+/// \param matl_z
+/// \param f_q
+/// \param thck
+/// \param epsilon
+/// \return
+///
+double CalcTF::newtonRaphson(double d_m,  double matl_z, double f_q, double thck, double epsilon) const {
+    double F_c = initial_guess_;
     double f_F_c = calcThickness(F_c, d_m, matl_z, f_q, thck);
     double df_F_c = deriCalcThickness(F_c, d_m, matl_z, f_q);
     while (fabs(f_F_c) > epsilon) {
@@ -45,6 +76,9 @@ double CalcTF::newtonRaphson(double initial_guess, double d_m,  double matl_z, d
     return F_c;
 }
 
+///
+/// \brief CalcTF::calcFunction
+///
 void CalcTF::calcFunction() const {
     bool ok;
     // xtal start frequency
@@ -77,7 +111,7 @@ void CalcTF::calcFunction() const {
             return;
         }
         // calc frequency stop
-        double f_c_calc = newtonRaphson(5000000, matl_d, matl_z, f_q, thck);
+        double f_c_calc = newtonRaphson(matl_d, matl_z, f_q, thck);
         ui->le_freq_stop->setText(QString::number(f_c_calc, 'f', 3));
         double life = (f_q - f_c_calc ) / cyg_range_ * 100;
         QString freq_text = u8"频率: \t" +  QString::number(f_c_calc, 'f', 3) + u8"\tHz";
@@ -109,11 +143,19 @@ void CalcTF::calcFunction() const {
     ui->lbl_result->setText(text_thickness + "\n" + text_rate);
 }
 
+///
+/// \brief CalcTF::errMsg
+/// \param title
+/// \param msg
+///
 void CalcTF::errMsg(const QString& title, const QString& msg) const {
     QMessageBox::information(nullptr, title, msg);
 }
 
-
+///
+/// \brief CalcTF::on_cb_method_currentIndexChanged
+/// \param index. 0: calculate thickness; 1: calculate frequency shift.
+///
 void CalcTF::on_cb_method_currentIndexChanged(int index) {
     calc_freq_ = index;
     ui->le_freq_stop->setHidden(calc_freq_);
@@ -126,7 +168,10 @@ void CalcTF::on_cb_method_currentIndexChanged(int index) {
     ui->cb_freq_range->setHidden(!calc_freq_);
 }
 
-
+///
+/// \brief CalcTF::on_cb_freq_range_currentIndexChanged
+/// \param index. 0: IC6/Cygnus2; 1: SQC310/XTC3, etc...
+///
 void CalcTF::on_cb_freq_range_currentIndexChanged(int index) {
     cyg_range_ = index ? 1000000 : 1500000;
 }
